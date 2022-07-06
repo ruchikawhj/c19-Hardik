@@ -4,13 +4,16 @@ var bg,backgroundImg
 var carsGroup;
 var gameState="play";
 var score=0;
+var gameOver,gameOverImg;
+var reset,resetImg;
 
 function preload(){
  boyImg=loadAnimation("b0.png","b1.png","b2.png","b3.png","b4.png","b5.png","b6.png","b7.png","b8.png","b9.png","b10.png","b11.png")
  backgroundImg=loadImage("background.png")
  carImg=loadImage("car.png")   
  boyHit=loadAnimation("b3.png")
- 
+ resetImg=loadImage("reset.png");
+ gameOverImg=loadImage("gameOver.png")
 }
 
 function setup(){
@@ -25,8 +28,17 @@ function setup(){
     boy.addAnimation("boyHit",boyHit)
     boy.scale=0.2
 
-   ground=createSprite(300,350,600,20)
-  ground.visible=false
+    ground=createSprite(300,350,600,20)
+    ground.visible=false;
+
+    reset=createSprite(width/2,height/2,100,50);
+    reset.addImage(resetImg);
+    reset.scale=0.2;
+    reset.visible=false;
+
+    gameOver=createSprite(width/2,height/2-50);
+    gameOver.addImage(gameOverImg);
+    gameOver.visible=false;
     carsGroup=new Group()
 
 } 
@@ -36,7 +48,7 @@ background(6)
 textSize(30);
 
 if(gameState==="play"){
-  boy.changeAnimation("boy")
+  boy.changeAnimation("boy");
   score+=Math.round(getFrameRate()/60);
 bg.velocityX=-3
 if (bg.x<=250){
@@ -49,17 +61,24 @@ if(keyDown("space")&&boy.y>100){
   
   boy.velocityY = boy.velocityY + 0.5;
 if(carsGroup.isTouching(boy)){
-  gameState="end"
+  gameState="end";
 }
 
 spawnCars()
 }
 if(gameState==="end"){
+  gameOver.visible=true;
+  score=0;
+  reset.visible=true;
   carsGroup.setLifetimeEach(-1);
   carsGroup.setVelocityXEach(0)
   bg.velocityX=0;
   boy.velocityX=0;
-  boy.changeAnimation("boy")
+  boy.changeAnimation("boyHit")
+  if(mousePressedOver(reset)){
+    restart();
+  }
+
 
 }
 
@@ -79,4 +98,13 @@ function spawnCars(){
     car.lifetime=400
     carsGroup.add(car)
   }
+}
+
+function restart(){
+  gameOver.visible=false;
+  score=0;
+  reset.visible=false;
+  carsGroup.destroyEach();
+ gameState="play"
+
 }
