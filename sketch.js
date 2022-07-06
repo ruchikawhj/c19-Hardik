@@ -24,7 +24,7 @@ function setup(){
 
     boy=createSprite(100,340)
     boy.addAnimation("boy",boyImg)
-    boy.debug=true;
+    
     boy.addAnimation("boyHit",boyHit)
     boy.scale=0.2
 
@@ -91,7 +91,7 @@ text("Score:"+score,400,50)
 function spawnCars(){
   if (frameCount%200===0){
     car =createSprite(800,320)
-    car.debug=true;
+  
     car.setCollider("circle",0,0,50)
     car.addImage(carImg)
     car.velocityX-=(3+score/100);
